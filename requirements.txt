@@ -1,0 +1,6 @@
+django>=4.2.0,<4.2.8
+djangorestframework
+requests
+django-cors-headers
+django-filter
+mysqlclient
