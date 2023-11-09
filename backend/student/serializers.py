@@ -23,7 +23,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
         validated_data['modified_at'] = None
         student_id = validated_data['student_id']
         try:
-            existing_staff = Student.objects.get(student_id=student_id)
+            existing_student = Student.objects.get(student_id=student_id)
             raise serializers.ValidationError("A student member with this student ID already exists.", code=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             pass
