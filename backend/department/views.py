@@ -6,6 +6,7 @@ from .serializers import DepartmentSerializer, UniversitySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 import logging
+from rest_framework.authentication import BasicAuthentication
 
 logger = logging.getLogger("main")
 
@@ -25,6 +26,7 @@ logger = logging.getLogger("main")
 class DepartmentList(generics.ListCreateAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+    authentication_classes = [BasicAuthentication]
     # permission_classes = [IsAdminOrReadOnly]
     permission_classes= [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -40,10 +42,12 @@ class DepartmentList(generics.ListCreateAPIView):
 class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
 class University(generics.RetrieveUpdateAPIView):
     queryset = University.objects.all()
     serializer_class = UniversitySerializer
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAdminOrReadOnly]

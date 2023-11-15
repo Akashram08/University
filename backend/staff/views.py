@@ -6,11 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrReadOnly
 from .serializers import StaffCreateSerializer,StaffUpdateSerializer
 import logging
+from rest_framework.authentication import BasicAuthentication
 
 logger = logging.getLogger("main")
 class StaffList(generics.ListCreateAPIView):
     queryset = Staff.objects.all()
     serializer_class = StaffCreateSerializer
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name', 'type_of_staff', 'staff_id', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']
