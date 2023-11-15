@@ -1,3 +1,4 @@
+from requests import Response
 from rest_framework import generics, filters
 from .models import Staff
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
@@ -31,3 +32,16 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StaffUpdateSerializer
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+  
+    def perform_retrieve(self, staff_id):
+       
+        try:
+            instance = Staff.objects.get(staff_id=staff_id)
+            serializer = StaffUpdateSerializer(instance)
+            return Response(serializer.data)
+        except StaffUpdateSerializer.DoesNotExist:
+            return Response({'error': 'Resource not found'}, status=404)
+        except Exception as e:
+            logger.error(f'Error retrieving data: {e}', exc_info=True)
+            return Response({'error': 'Internal Server Error'}, status=500)
+        

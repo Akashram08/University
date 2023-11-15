@@ -1,3 +1,4 @@
+from requests import Response
 from rest_framework import generics, filters
 from .models import Student
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
@@ -6,6 +7,7 @@ from .serializers import StudentCreateSerializer, StudentUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 import logging
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authentication import BasicAuthentication
 
 logger = logging.getLogger("main")
@@ -32,4 +34,15 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
    
- 
+    def perform_retrieve(self, student_id):
+       
+        try:
+            instance = Student.objects.get(student_id=student_id)
+            serializer = StudentUpdateSerializer(instance)
+            return Response(serializer.data)
+        except StudentUpdateSerializer.DoesNotExist:
+            return Response({'error': 'Resource not found'}, status=404)
+        except Exception as e:
+            logger.error(f'Error retrieving data: {e}', exc_info=True)
+            return Response({'error': 'Internal Server Error'}, status=500)
+        
