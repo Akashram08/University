@@ -29,4 +29,5 @@ class StaffList(generics.ListCreateAPIView):
 class StaffDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Staff.objects.all()
     serializer_class = StaffUpdateSerializer
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
