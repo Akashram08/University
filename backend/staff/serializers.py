@@ -50,5 +50,8 @@ class StaffUpdateSerializer(serializers.ModelSerializer):
         validated_data['name'] = validated_data['name'].title()
         validated_data['modified_by'] = user
         validated_data['modified_at'] = timezone.now()
-        instance = super().update(instance, validated_data)
+        try:
+            instance = super().update(instance, validated_data)
+        except Exception as e:
+            logger.error(f'Error updating a staff: {e}', exc_info=True)
         return instance
