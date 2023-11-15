@@ -27,6 +27,12 @@ class StudentList(generics.ListCreateAPIView):
             serializer.save(created_by=self.request.user)
         except Exception as e:
             logger.error(f'Error creating a staff: {e}', exc_info=True)
+    
+    def perform_list(self):
+        try:
+            pass
+        except Exception as e:
+            logger.error(f'Error performing list: {e}', exc_info=True)
         
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
@@ -45,4 +51,10 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
         except Exception as e:
             logger.error(f'Error retrieving data: {e}', exc_info=True)
             return Response({'error': 'Internal Server Error'}, status=500)
-        
+
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except Exception as e:
+            logger.error(f'Error deleting data: {e}', exc_info=True)
+            return Response({'error': 'Internal Server Error'}, status=500)
