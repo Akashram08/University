@@ -47,7 +47,7 @@ class StaffUpdateSerializer(serializers.ModelSerializer):
         fields = ['name', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']
     def update(self, instance, validated_data):
         user = self.context['request'].user
-        validated_data['name'] = validated_data['name'].capitalize()
+        validated_data['name'] = validated_data['name'].title()
         validated_data['modified_by'] = user
         validated_data['modified_at'] = timezone.now()
         instance = super().update(instance, validated_data)

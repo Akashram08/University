@@ -48,12 +48,10 @@ class StudentUpdateSerializer(serializers.ModelSerializer):
         fields = ['name', 'CGPA', 'created_by', 'created_at', 'modified_by', 'modified_at']
     def update(self, instance, validated_data):
         user = self.context['request'].user
-        validated_data['name'] = validated_data['name'].capitalize()
+        validated_data['name'] = validated_data['name'].title()
         validated_data['modified_by'] = user
         validated_data['modified_at'] = timezone.now()
-        try:
-            instance = super().update(instance, validated_data)
-        except Exception as e:
-            logger.error(f'Error updating a staff: {e}', exc_info=True)
+        instance = super().update(instance, validated_data)
+
         return instance
     
