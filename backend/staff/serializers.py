@@ -3,12 +3,12 @@ from .models import Staff
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
 import logging
-
+from department.models import Department
 logger = logging.getLogger("main")
 class StaffCreateSerializer(serializers.ModelSerializer):
     created_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
     modified_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
-   
+    department = serializers.SlugRelatedField(slug_field='name', queryset=Department.objects.all(), many=True)
     staff_type_prefixes = {
         'non-teaching': 'ANT-',
         'teaching': 'AT-',
@@ -41,7 +41,7 @@ class StaffCreateSerializer(serializers.ModelSerializer):
 class StaffUpdateSerializer(serializers.ModelSerializer):
     created_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
     modified_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
-
+    department = serializers.SlugRelatedField(slug_field='name', queryset=Department.objects.all(), many=True)
     class Meta:
         model = Staff
         fields = ['name', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']

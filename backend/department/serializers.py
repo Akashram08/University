@@ -20,3 +20,10 @@ class DepartmentSerializer(serializers.ModelSerializer):
     # def get_student_count(self, obj):
     #     return obj.student_count()
     
+# class DepartmentNameSerializer(serializers.ModelSerializer):
+#     # staff_count = serializers.SerializerMethodField()
+#     # student_count = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Department
+#         fields = ['name','university']

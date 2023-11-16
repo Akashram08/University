@@ -5,11 +5,13 @@ from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExi
 import logging
 
 logger = logging.getLogger("main")
+from department.models import Department
 
+        
 class StudentCreateSerializer(serializers.ModelSerializer):
     created_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
     modified_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
-    # department = DepartmentSerializer()
+    department = serializers.SlugRelatedField(slug_field='name', queryset=Department.objects.all())
 
     class Meta:
         model = Student
@@ -17,7 +19,6 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].title()
-
         # Add the fixed prefix 'AM-' to the Student_Id during creation
         validated_data['student_id'] = 'AM-' + validated_data['student_id']
         validated_data['modified_at'] = None
@@ -43,6 +44,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 class StudentUpdateSerializer(serializers.ModelSerializer):
     created_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
     modified_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    department = serializers.SlugRelatedField(slug_field='alias_name', queryset=Department.objects.all())
     class Meta:
         model = Student
         fields = ['name', 'CGPA', 'created_by', 'created_at', 'modified_by', 'modified_at']
