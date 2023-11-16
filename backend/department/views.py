@@ -46,7 +46,7 @@ class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     
-    def perform_retrieve(self, id):
+    def retrieve(self, id):
         try:
             instance = Department.objects.get(id=id)
             serializer = DepartmentSerializer(instance)

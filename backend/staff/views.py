@@ -41,7 +41,7 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
   
-    def perform_retrieve(self, staff_id):
+    def retrieve(self, staff_id):
        
         try:
             instance = Staff.objects.get(staff_id=staff_id)

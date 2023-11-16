@@ -40,7 +40,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
    
-    def perform_retrieve(self, student_id):
+    def retrieve(self, student_id):
        
         try:
             instance = Student.objects.get(student_id=student_id)
