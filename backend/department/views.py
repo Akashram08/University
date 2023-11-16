@@ -46,16 +46,7 @@ class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     
-    def retrieve(self, id):
-        try:
-            instance = Department.objects.get(id=id)
-            serializer = DepartmentSerializer(instance)
-            return Response(serializer.data)
-        except DepartmentSerializer.DoesNotExist:
-            return Response({'error': 'Resource not found'}, status=404)
-        except Exception as e:
-            logger.error(f'Error retrieving data: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=500)
+
     
 
 class University(generics.RetrieveUpdateAPIView):
