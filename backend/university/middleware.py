@@ -12,7 +12,7 @@ class TestMiddleware:
         response = self.get_response(request, *args, **kwargs)
         end_time = time.monotonic()
 
-        status_code = getattr(response, 'status_code', None)
+        status_code = response.status_code
         logger.info(f"HTTP Status Code: {status_code} - View has been executing for: {end_time - start_time} seconds")
 
         return response

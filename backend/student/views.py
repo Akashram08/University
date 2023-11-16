@@ -39,11 +39,21 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentUpdateSerializer
     authentication_classes = [BasicAuthentication , SessionAuthentication]
     permission_classes = [IsAuthenticated]
-   
+    
+    # def retrieve(self, request, *args, **kwargs):
+    #     try:
+    #         pass
+    #     except ObjectDoesNotExist:
+    #         return Response({'error': 'Resource not found'}, status=status.HTTP_404_NOT_FOUND)
+    #     except Exception as e:
+    #         logger.error(f'Error performing list: {e}', exc_info=True)
+    #         return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
    
     def perform_destroy(self, instance):
         try:
             instance.delete()
+        except ObjectDoesNotExist:
+            return Response({'error': 'Resource not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             logger.error(f'Error deleting data: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=500)
+            return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

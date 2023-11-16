@@ -1,6 +1,7 @@
 from requests import Response
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
 from .models import Staff
+from django.core.exceptions import ObjectDoesNotExist
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
@@ -45,6 +46,8 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         try:
             instance.delete()
+        except ObjectDoesNotExist:
+            return Response({'error': 'Resource not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             logger.error(f'Error deleting data: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=500)
+            return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
