@@ -44,7 +44,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 class StudentUpdateSerializer(serializers.ModelSerializer):
     created_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
     modified_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
-    department = serializers.SlugRelatedField(slug_field='alias_name', queryset=Department.objects.all())
+
     class Meta:
         model = Student
         fields = ['name', 'CGPA', 'created_by', 'created_at', 'modified_by', 'modified_at']
