@@ -1,5 +1,5 @@
 from requests import Response
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
 from .models import Student
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from .permissions import IsAdminOrReadOnly
@@ -37,21 +37,10 @@ class StudentList(generics.ListCreateAPIView):
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentUpdateSerializer
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    authentication_classes = [BasicAuthentication , SessionAuthentication]
     permission_classes = [IsAuthenticated]
    
-    def retrieve(self, student_id):
-       
-        try:
-            instance = Student.objects.get(student_id=student_id)
-            serializer = StudentUpdateSerializer(instance)
-            return Response(serializer.data)
-        except StudentUpdateSerializer.DoesNotExist:
-            return Response({'error': 'Resource not found'}, status=404)
-        except Exception as e:
-            logger.error(f'Error retrieving data: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=500)
-
+   
     def perform_destroy(self, instance):
         try:
             instance.delete()

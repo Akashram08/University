@@ -41,17 +41,6 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
   
-    def retrieve(self, staff_id):
-       
-        try:
-            instance = Staff.objects.get(staff_id=staff_id)
-            serializer = StaffUpdateSerializer(instance)
-            return Response(serializer.data)
-        except StaffUpdateSerializer.DoesNotExist:
-            return Response({'error': 'Resource not found'}, status=404)
-        except Exception as e:
-            logger.error(f'Error retrieving data: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=500)
     
     def perform_destroy(self, instance):
         try:
