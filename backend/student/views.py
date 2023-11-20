@@ -25,6 +25,10 @@ class StudentList(generics.ListCreateAPIView, viewsets.ViewSet):
     def get(self, request, *args, **kwargs):
             try:
                 queryset = Student.objects.all()
+                page = self.paginate_queryset(queryset)
+                if page is not None:
+                    serializer = StudentCreateSerializer(page, many=True)
+                    return self.get_paginated_response(serializer.data)
                 serializer = StudentCreateSerializer(queryset, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -58,6 +62,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
         try:
             st = Student.objects.get(id=pk)
             st.delete()
+            return Response({'success': 'Resource deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Student.DoesNotExist:
             return Response({'error': 'Resource not found'}, status=404)
         except Exception as e:

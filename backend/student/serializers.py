@@ -22,6 +22,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
         # Add the fixed prefix 'AM-' to the Student_Id during creation
         validated_data['student_id'] = 'AM-' + validated_data['student_id']
         validated_data['modified_at'] = None
+        validated_data['created_by'] = self.context['request'].user
         student_id = validated_data['student_id']
         existing_student = Student.objects.filter(student_id=student_id).first()
         if existing_student:

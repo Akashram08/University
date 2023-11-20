@@ -24,6 +24,10 @@ class StaffList(generics.ListCreateAPIView, viewsets.ViewSet):
     def get(self, request, *args, **kwargs):
             try:
                 queryset = Staff.objects.all()
+                page = self.paginate_queryset(queryset)
+                if page is not None:
+                    serializer = StaffCreateSerializer(page, many=True)
+                    return self.get_paginated_response(serializer.data)
                 serializer = StaffCreateSerializer(queryset, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -58,6 +62,7 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
         try:
             st = Staff.objects.get(id=pk)
             st.delete()
+            return Response({'success': 'Resource deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Staff.DoesNotExist:
             return Response({'error': 'Resource not found'}, status=404)
         except Exception as e:

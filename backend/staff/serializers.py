@@ -20,17 +20,18 @@ class StaffCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].title()
-
+        validated_data['created_by'] = self.context['request'].user
         type_of_staff = validated_data.get('type_of_staff', '').strip().lower()
         prefix = self.staff_type_prefixes.get(type_of_staff, '')
         validated_data['staff_id'] = prefix + validated_data['staff_id']
         validated_data['modified_at'] = None
         staff_id = validated_data['staff_id']
-        try:
-            existing_staff = Staff.objects.get(staff_id=staff_id)
-            raise serializers.ValidationError("A staff member with this staff ID already exists.", code=status.HTTP_400_BAD_REQUEST)
-        except ObjectDoesNotExist:
-            pass
+        existing_staff = Staff.objects.filter(staff_id=staff_id).first()
+        if existing_staff:
+            error_message = "A staff member with this staff ID already exists."
+            logger.error(error_message)
+            raise serializers.ValidationError(error_message, code=status.HTTP_400_BAD_REQUEST)
+
         return super().create(validated_data)
 
     def validate_Staff_Id(self, value):

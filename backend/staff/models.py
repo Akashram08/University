@@ -13,7 +13,7 @@ class Staff(models.Model):
         default=TEACHING )
     staff_id= models.CharField(unique=True, max_length=15)
     department = models.ManyToManyField(Department,  related_name='staff')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='staff_created')
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='staff_created')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='staff_modified', null=True, blank= True)
     modified_at = models.DateTimeField( editable=False, null=True, blank=True)
