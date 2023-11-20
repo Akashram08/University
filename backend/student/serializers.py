@@ -23,11 +23,12 @@ class StudentCreateSerializer(serializers.ModelSerializer):
         validated_data['student_id'] = 'AM-' + validated_data['student_id']
         validated_data['modified_at'] = None
         student_id = validated_data['student_id']
-        try:
-            existing_student = Student.objects.get(student_id=student_id)
-            raise serializers.ValidationError("A student member with this student ID already exists.", code=status.HTTP_400_BAD_REQUEST)
-        except ObjectDoesNotExist:
-            pass
+        existing_student = Student.objects.filter(student_id=student_id).first()
+        if existing_student:
+            error_message = "A student member with this student ID already exists."
+            logger.error(error_message)
+            raise serializers.ValidationError(error_message, code=status.HTTP_400_BAD_REQUEST)
+
         return super().create(validated_data)
 
     def validate_CGPA(self, value):
@@ -55,6 +56,9 @@ class StudentUpdateSerializer(serializers.ModelSerializer):
         validated_data['modified_at'] = timezone.now()
         try:
             instance = super().update(instance, validated_data)
+        except ObjectDoesNotExist as e:
+            logger.error(f'ObjectDoesNotExist exception: {e}', exc_info=True)
+            raise serializers.ValidationError("Object does not exist", code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             logger.error(f'Error updating a student: {e}', exc_info=True)
         return instance

@@ -1,5 +1,6 @@
-from requests import Response
+from rest_framework.response import Response
 from rest_framework import generics, filters, status
+from rest_framework import viewsets
 from .models import Student
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from .permissions import IsAdminOrReadOnly
@@ -12,7 +13,7 @@ from rest_framework.authentication import BasicAuthentication, SessionAuthentica
 
 logger = logging.getLogger("main")
 
-class StudentList(generics.ListCreateAPIView):
+class StudentList(generics.ListCreateAPIView, viewsets.ViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentCreateSerializer
     authentication_classes = [BasicAuthentication, SessionAuthentication]
@@ -22,38 +23,38 @@ class StudentList(generics.ListCreateAPIView):
     search_fields = ['name', 'CGPA', 'student_id', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']
     ordering_fields = ['name', 'CGPA', 'student_id', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']
 
-    def perform_create(self, serializer):
-        try:
-            serializer.save(created_by=self.request.user)
-        except Exception as e:
-            logger.error(f'Error creating a staff: {e}', exc_info=True)
     
-    def perform_list(self):
-        try:
-            pass
-        except Exception as e:
-            logger.error(f'Error performing list: {e}', exc_info=True)
+
+    
         
-class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentUpdateSerializer
     authentication_classes = [BasicAuthentication , SessionAuthentication]
     permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'  
     
-    # def retrieve(self, request, *args, **kwargs):
-    #     try:
-    #         pass
-    #     except ObjectDoesNotExist:
-    #         return Response({'error': 'Resource not found'}, status=status.HTTP_404_NOT_FOUND)
-    #     except Exception as e:
-    #         logger.error(f'Error performing list: {e}', exc_info=True)
-    #         return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-   
-    def perform_destroy(self, instance):
+    def get(self, request, pk, *args, **kwargs):
         try:
-            instance.delete()
-        except ObjectDoesNotExist:
-            return Response({'error': 'Resource not found'}, status=status.HTTP_404_NOT_FOUND)
+            instance = Student.objects.get(id=pk)
+            # instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)  
+
+        except Student.DoesNotExist:
+            return Response({'error': 'Resource not found'}, status=404)
+        
+        except Exception as e:
+            # Log the error or handle it as needed
+            logger.error(f'Error retrieving data: {e}', exc_info=True)
+            return Response({'error': 'Internal Server Error'}, status=500)
+        
+    def delete(self, request, pk):
+        try:
+            st = Student.objects.get(id=pk)
+            st.delete()
+        except Student.DoesNotExist:
+            return Response({'error': 'Resource not found'}, status=404)
         except Exception as e:
             logger.error(f'Error deleting data: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Internal Server Error'}, status=500)

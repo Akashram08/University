@@ -146,7 +146,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'main_formatter':{
-            'format':"{asctime} - {levelname} - {module} - {message} - Status Code: {status_code}",
+            'format':"{asctime} - {levelname} - {module} - {message} - {status}",
             'style':"{",
             },
         },
