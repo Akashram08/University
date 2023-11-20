@@ -2,7 +2,6 @@ from rest_framework.response import Response
 from rest_framework import generics, filters, status
 from rest_framework import viewsets
 from .models import Student
-# from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from .permissions import IsAdminOrReadOnly
 from .serializers import StudentCreateSerializer, StudentUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -43,7 +42,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     def get(self, request, pk, *args, **kwargs):
         try:
             instance = Student.objects.get(id=pk)
-            # instance = self.get_object()
+
             serializer = self.get_serializer(instance)
             return Response(serializer.data)  
 
@@ -51,7 +50,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             return Response({'error': 'Resource not found'}, status=404)
         
         except Exception as e:
-            # Log the error or handle it as needed
+   
             logger.error(f'Error retrieving data: {e}', exc_info=True)
             return Response({'error': 'Internal Server Error'}, status=500)
         

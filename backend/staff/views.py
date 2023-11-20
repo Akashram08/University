@@ -3,7 +3,6 @@ from rest_framework import viewsets
 from rest_framework import generics, filters, status
 from .models import Staff
 from django.core.exceptions import ObjectDoesNotExist
-# from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrReadOnly
@@ -50,7 +49,7 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             return Response({'error': 'Resource not found'}, status=404)
         
         except Exception as e:
-            # Log the error or handle it as needed
+          
             logger.error(f'Error retrieving data: {e}', exc_info=True)
             return Response({'error': 'Internal Server Error'}, status=500)
         
