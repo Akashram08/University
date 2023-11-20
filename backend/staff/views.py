@@ -29,9 +29,9 @@ class StaffList(generics.ListCreateAPIView, viewsets.ViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             except Exception as e:
-                error_message = f'Error retrieving staff list: {e}'
-                logger.error(error_message, exc_info=True)
-                return Response({'error': error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                logger.error(f'Error retrieving Staff list: {e}', exc_info=True)
+                return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
       
 class StaffDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     queryset = Staff.objects.all()

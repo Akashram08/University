@@ -23,9 +23,15 @@ class StudentList(generics.ListCreateAPIView, viewsets.ViewSet):
     search_fields = ['name', 'CGPA', 'student_id', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']
     ordering_fields = ['name', 'CGPA', 'student_id', 'department', 'created_by', 'created_at', 'modified_by', 'modified_at']
 
-    
+    def get(self, request, *args, **kwargs):
+            try:
+                queryset = Student.objects.all()
+                serializer = StudentCreateSerializer(queryset, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
+            except Exception as e:
+                logger.error(f'Error retrieving Student list: {e}', exc_info=True)
+                return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     queryset = Student.objects.all()
