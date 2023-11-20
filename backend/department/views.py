@@ -1,5 +1,5 @@
 from requests import Response
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from .permissions import IsAdminOrReadOnly
 from .models import Department, University
@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 import logging
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 
 
     
@@ -37,9 +37,10 @@ class DepartmentList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         try:
             serializer.save() 
+            return Response({'success': 'Created successfully'}, status=status.HTTP_200_OK)
         except Exception as e:
             logger.error(f'Error creating a department: {e}', exc_info=True)
-
+            return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer

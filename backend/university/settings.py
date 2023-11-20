@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'university.middleware.TestMiddleware',
+    # 'university.middleware.TestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -141,31 +141,69 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     
 }
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'main_formatter':{
-            'format':"{asctime} - {levelname} - {module} - {message} - {status}",
+            'format':"{asctime} - {levelname} - {module} - {message} ",
             'style':"{",
             },
         },
     'handlers':{
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
         'console':{
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter':'main_formatter',
         },
         'file':{
-            'class': 'logging.FileHandler',
-            'filename': 'info.log',
-            'formatter': 'main_formatter'
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': f"{BASE_DIR}/logs/debug.log",
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+            'formatter':'main_formatter',
         },
         },
     'loggers':{
-        'main':{
-            'handlers': ['file', 'console'],
-            'propagate': True,
-            'level': "INFO",
+
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'WARN',
+            'propagate': False,
         },
+        'django': {
+            'handlers': ['console', 'file'],
+            'propagate': True,
+            'level': 'WARN',
+        },
+        'django.request': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        'main':{
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,},
+        'student': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
     },
+        'staff': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+    },
+        'department':{
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+    },
+}}
 }

@@ -3,9 +3,9 @@ from .models import Student
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
 import logging
-
-logger = logging.getLogger("main")
 from department.models import Department
+logger = logging.getLogger(__name__)
+
 
         
 class StudentCreateSerializer(serializers.ModelSerializer):

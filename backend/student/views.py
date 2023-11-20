@@ -10,7 +10,7 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 
 class StudentList(generics.ListCreateAPIView, viewsets.ViewSet):
     queryset = Student.objects.all()
@@ -48,7 +48,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             instance = Student.objects.get(id=pk)
 
             serializer = self.get_serializer(instance)
-            return Response(serializer.data)  
+            return Response(serializer.data, status=status.HTTP_200_OK)  
 
         except Student.DoesNotExist:
             return Response({'error': 'Resource not found'}, status=404)

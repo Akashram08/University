@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
 import logging
 from department.models import Department
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 class StaffCreateSerializer(serializers.ModelSerializer):
     created_by = serializers.SlugRelatedField(slug_field='username', read_only=True)
     modified_by = serializers.SlugRelatedField(slug_field='username', read_only=True)

@@ -10,7 +10,7 @@ from .serializers import StaffCreateSerializer,StaffUpdateSerializer
 import logging
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 class StaffList(generics.ListCreateAPIView, viewsets.ViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffCreateSerializer
@@ -45,9 +45,8 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     def get(self, request, pk, *args, **kwargs):
         try:
             instance = Staff.objects.get(id=pk)
-            # instance = self.get_object()
             serializer = self.get_serializer(instance)
-            return Response(serializer.data)  
+            return Response(serializer.data, status=status.HTTP_200_OK)  
 
         except Staff.DoesNotExist:
             return Response({'error': 'Resource not found'}, status=404)
