@@ -9,7 +9,8 @@ class UniversitySerializer(serializers.ModelSerializer):
 class DepartmentSerializer(serializers.ModelSerializer):
     # staff_count = serializers.SerializerMethodField()
     # student_count = serializers.SerializerMethodField()
-
+   
+    university = serializers.SlugRelatedField(slug_field='name', queryset=Department.objects.all())
     class Meta:
         model = Department
         fields = '__all__'
