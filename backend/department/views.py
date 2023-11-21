@@ -5,7 +5,7 @@ from .permissions import IsAdminOrReadOnly
 from .models import Department, University
 from .serializers import DepartmentSerializer, UniversitySerializer
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
+# from rest_framework.permissions import IsAuthenticated
 import logging
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
@@ -28,8 +28,7 @@ class DepartmentList(generics.ListCreateAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     authentication_classes = [BasicAuthentication, SessionAuthentication]
-    # permission_classes = [IsAdminOrReadOnly]
-    permission_classes= [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name']
