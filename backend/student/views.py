@@ -26,11 +26,9 @@ class StudentList(generics.ListCreateAPIView, viewsets.ViewSet):
             try:
                 queryset = Student.objects.all()
                 page = self.paginate_queryset(queryset)
-                if page is not None:
-                    serializer = StudentCreateSerializer(page, many=True)
-                    return self.get_paginated_response(serializer.data)
-                serializer = StudentCreateSerializer(queryset, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                serializer = StudentCreateSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
 
             except Exception as e:
                 logger.error(f'Error retrieving Student list: {e}', exc_info=True)
@@ -46,7 +44,6 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     def get(self, request, pk, *args, **kwargs):
         try:
             instance = Student.objects.get(id=pk)
-
             serializer = self.get_serializer(instance)
             return Response(serializer.data, status=status.HTTP_200_OK)  
 
@@ -54,7 +51,6 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             return Response({'error': 'Resource not found'}, status=404)
         
         except Exception as e:
-   
             logger.error(f'Error retrieving data: {e}', exc_info=True)
             return Response({'error': 'Internal Server Error'}, status=500)
         

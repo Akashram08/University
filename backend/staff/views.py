@@ -25,11 +25,8 @@ class StaffList(generics.ListCreateAPIView, viewsets.ViewSet):
             try:
                 queryset = Staff.objects.all()
                 page = self.paginate_queryset(queryset)
-                if page is not None:
-                    serializer = StaffCreateSerializer(page, many=True)
-                    return self.get_paginated_response(serializer.data)
-                serializer = StaffCreateSerializer(queryset, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                serializer = StaffCreateSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
 
             except Exception as e:
                 logger.error(f'Error retrieving Staff list: {e}', exc_info=True)
