@@ -21,7 +21,7 @@ class StaffCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].title()
         validated_data['created_by'] = self.context['request'].user
-        type_of_staff = validated_data.get('type_of_staff', '').strip().lower()
+        type_of_staff = validated_data.get('type_of_staff', '').lower()
         prefix = self.staff_type_prefixes.get(type_of_staff, '')
         validated_data['staff_id'] = prefix + validated_data['staff_id']
         validated_data['modified_at'] = None
