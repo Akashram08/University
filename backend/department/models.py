@@ -9,9 +9,15 @@ class University(models.Model):
     
 
 class Department(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     university = models.ForeignKey(University, on_delete=models.CASCADE, related_name='departments')
-    
+
     def __str__(self):
         return self.name
+    @property
+    def staff_count(self):
+        return self.staff.all().count()
 
+    @property
+    def student_count(self):
+        return self.students.all().count()

@@ -1,4 +1,5 @@
-from requests import Response
+from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework import generics, filters, status
 # from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from .permissions import IsAdminOrReadOnly
@@ -12,19 +13,7 @@ from rest_framework.authentication import BasicAuthentication, SessionAuthentica
 logger = logging.getLogger(__name__)
 
 
-    
-    # def perform_update(self, serializer):
-    #     existing_object = self.get_object()
-
-    #     # Check if modified_by is provided and not null
-    #     if 'modified_by' in serializer.validated_data and serializer.validated_data['modified_by']:
-    #         # Set modified_at when modified_by is not null
-    #         serializer.save(modified_at=timezone.now())
-    #     else:
-    #         # Keep modified_at as is when modified_by is null
-    #         serializer.validated_data['modified_at'] = existing_object.modified_at
-
-class DepartmentList(generics.ListCreateAPIView):
+class DepartmentList(generics.ListCreateAPIView, viewsets.ViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     authentication_classes = [BasicAuthentication, SessionAuthentication]
@@ -32,14 +21,18 @@ class DepartmentList(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['name']
     search_fields = ['name']
-    ordering_fields = ['name']
-    def perform_create(self, serializer):
+    ordering_fields = ['name'] 
+
+    def get(self, serializer):
         try:
-            serializer.save() 
-            return Response({'success': 'Created successfully'}, status=status.HTTP_200_OK)
+            queryset = Department.objects.all()
+            page = self.paginate_queryset(queryset)
+            serializer = DepartmentSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         except Exception as e:
-            logger.error(f'Error creating a department: {e}', exc_info=True)
-            return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.error(f'Error retrieving Department list: {e}', exc_info=True)
+            return Response({'error': 'Internal Server Error'},  status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer

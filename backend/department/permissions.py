@@ -4,7 +4,7 @@ class IsAdminOrReadOnly(permissions.IsAdminUser):
     def has_permission(self, request, view):
         if request.method =='GET':
             return True
-        return False
+        return super().has_permission(request, view)
 
 # class CanUpdateStaffDetails(permissions.BasePermission):
 #     message = "You do not have permission to update staff details."
