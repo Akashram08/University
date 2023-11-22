@@ -17,10 +17,28 @@ class StudentCreateSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
 
+    def first_letters(self,validated_data):
+        dep=validated_data['department']
+        if isinstance(dep, Department):
+            # Assuming 'name' is the attribute of Department containing the string
+            dep_name = dep.name
+        else:
+            dep_name = dep
+
+        words = dep_name.split()
+    
+
+# Extract the first letter of each word
+        first_letters = [word[0] for word in words if word.istitle()]
+
+# Combine the first letters into a new string
+        secondprefix = ''.join(first_letters)
+        return secondprefix
     def create(self, validated_data):
+        secondprefix = self.first_letters(validated_data)
         validated_data['name'] = validated_data['name'].title()
         # Add the fixed prefix 'AM-' to the Student_Id during creation
-        validated_data['student_id'] = 'AM-' + validated_data['student_id']
+        validated_data['student_id'] = 'AM-' + secondprefix +validated_data['student_id']
         validated_data['modified_at'] = None
         validated_data['created_by'] = self.context['request'].user
         student_id = validated_data['student_id']
