@@ -140,14 +140,28 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60*5,
+    'DEFAULT_CACHE_BACKEND': 'django_redis.cache.RedisCache',
+    'DEFAULT_CACHE_ALIAS': 'default',
+
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:8000/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX': 'my_cache_key_prefix',
+    }
+}
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'main_formatter':{
-            'format':"{asctime} - {levelname} - {module} - {message} ",
+            'format':"{asctime} - {levelname} - {module} - {message}",
             'style':"{",
             },
         },
