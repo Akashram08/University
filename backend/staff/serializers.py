@@ -1,7 +1,7 @@
 from rest_framework import serializers, status
 from .models import Staff
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 import logging
 from department.models import Department
 logger = logging.getLogger(__name__)

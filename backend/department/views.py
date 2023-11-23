@@ -1,12 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import generics, filters, status
-# from .permissions import CanUpdateStaffDetails, CanUpdateStudentDetails, IsAdminOrReadOnly
 from .permissions import IsAdminOrReadOnly
 from .models import Department, University
 from .serializers import DepartmentSerializer, UniversitySerializer
 from django_filters.rest_framework import DjangoFilterBackend
-# from rest_framework.permissions import IsAuthenticated
 import logging
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 

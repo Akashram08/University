@@ -1,7 +1,7 @@
 from rest_framework import serializers, status
 from .models import Student
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist  
 import logging
 from department.models import Department
 logger = logging.getLogger(__name__)
@@ -20,7 +20,6 @@ class StudentCreateSerializer(serializers.ModelSerializer):
     def first_letters(self,validated_data):
         dep=validated_data['department']
         if isinstance(dep, Department):
-            # Assuming 'name' is the attribute of Department containing the string
             dep_name = dep.name
         else:
             dep_name = dep
@@ -37,7 +36,6 @@ class StudentCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         secondprefix = self.first_letters(validated_data)
         validated_data['name'] = validated_data['name'].title()
-        # Add the fixed prefix 'AM-' to the Student_Id during creation
         validated_data['student_id'] = 'AM-' + secondprefix +validated_data['student_id']
         validated_data['modified_at'] = None
         validated_data['created_by'] = self.context['request'].user
