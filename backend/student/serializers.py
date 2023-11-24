@@ -19,10 +19,9 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 
     def first_letters(self,validated_data):
         dep=validated_data['department']
-        if isinstance(dep, Department):
-            dep_name = dep.name
-        else:
-            dep_name = dep
+
+        dep_name = dep.name
+
 
         words = dep_name.split()
     
