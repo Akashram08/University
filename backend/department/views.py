@@ -10,7 +10,6 @@ from rest_framework.authentication import BasicAuthentication, SessionAuthentica
 
 logger = logging.getLogger(__name__)
 
-
 class DepartmentList(generics.ListCreateAPIView, viewsets.ViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
@@ -31,14 +30,25 @@ class DepartmentList(generics.ListCreateAPIView, viewsets.ViewSet):
             logger.error(f'Error retrieving Department list: {e}', exc_info=True)
             return Response({'error': 'Internal Server Error'},  status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
+class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            instance = Department.objects.get(id=pk)
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)  
 
-    
+        except Department.DoesNotExist:
+            return Response({'error': 'Department not found'}, status=404)
+        
+        except Exception as e:
+          
+            logger.error(f'Error retrieving data: {e}', exc_info=True)
+            return Response({'error': 'Internal Server Error'}, status=500)
 
 class University(generics.RetrieveUpdateAPIView):
     queryset = University.objects.all()

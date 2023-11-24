@@ -48,7 +48,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)  
 
         except Student.DoesNotExist:
-            return Response({'error': 'Resource not found'}, status=404)
+            return Response({'error': 'Student not found'}, status=404)
         
         except Exception as e:
             logger.error(f'Error retrieving data: {e}', exc_info=True)
@@ -60,7 +60,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             st.delete()
             return Response({'success': 'Resource deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Student.DoesNotExist:
-            return Response({'error': 'Resource not found'}, status=404)
+            return Response({'error': 'Student not found'}, status=404)
         except Exception as e:
             logger.error(f'Error deleting data: {e}', exc_info=True)
             return Response({'error': 'Internal Server Error'}, status=500)

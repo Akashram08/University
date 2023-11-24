@@ -45,8 +45,8 @@ class StaffDetail(generics.RetrieveUpdateDestroyAPIView, viewsets.ViewSet):
             serializer = self.get_serializer(instance)
             return Response(serializer.data, status=status.HTTP_200_OK)  
 
-        except Staff.DoesNotExist:
-            return Response({'error': 'Resource not found'}, status=404)
+        except ObjectDoesNotExist:
+            return Response({'error': 'Staff not found'}, status=404)
         
         except Exception as e:
           
