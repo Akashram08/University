@@ -1,6 +1,8 @@
-django>=4.2.0,<4.2.8
+django>=4.2.27
 djangorestframework
 requests
 django-cors-headers
 django-filter
 mysqlclient
+sqlparse>=0.5.4 # not directly required, pinned by Snyk to avoid a vulnerability
+urllib3>=2.6.0 # not directly required, pinned by Snyk to avoid a vulnerability
